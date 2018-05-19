@@ -36,52 +36,26 @@ public class NumbersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_numbers);
 
-        ArrayList<String> numbers = new ArrayList<String>();
-        numbers.add("one");
-        numbers.add("two");
-        numbers.add("three");
-        numbers.add("four");
-        numbers.add("five");
-        numbers.add("six");
-        numbers.add("seven");
-        numbers.add("eight");
-        numbers.add("nine");
-        numbers.add("ten");
+        ArrayList<Word> numbers = new ArrayList<Word>();
+        numbers.add(new Word("one","lutti"));
+        numbers.add(new Word("two", "otiiko"));
+        numbers.add(new Word("three", "tolookosu"));
+        numbers.add(new Word("four", "oyyisa"));
+        numbers.add(new Word("five", "massokka"));
+        numbers.add(new Word("six", "temmokka"));
+        numbers.add(new Word("seven", "kenekaku"));
+        numbers.add(new Word("eight", "kawinta"));
+        numbers.add(new Word("nine", "wo’e"));
+        numbers.add(new Word("ten", "na’aacha"));
 
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, numbers);
+        // instantiate a WordAdapter that with data source on the ArrayList
+        WordAdapter adapter = new WordAdapter(this, numbers);
 
+        // link ListView to XML in this case rootView is linked to numbers.XML
         ListView listView = findViewById(rootView);
 
-        listView.setAdapter(itemsAdapter);
-
-       /*Log.v("NumbersActivity", "numbers array at index 0 " + numbers.get(0));
-
-        dynamically create view by looping thru a list
-        LinearLayout rootView = findViewById(R.id.rootView);
-
-        int index;
-
-        int index = 0;
-
-            while (index < numbers.size()){
-            //Log.v("NumbersActivity", "Index" + index + "Value: "+ numbers.get(index));
-            //create new text view, important: context!
-            TextView numbersView = new TextView(this);
-
-            // set the text:
-            numbersView.setText(numbers.get(index));
-
-            //add view to parent layout
-            rootView.addView(numbersView);
-
-            index++;
-        }
-            for (index = 0; index < numbers.size(); index++){
-            TextView numbersView = new TextView(this);
-            numbersView.setText(numbers.get(index));
-            rootView.addView(numbersView);
-        }*/
-
+        //set the listView to use the adapter
+        listView.setAdapter(adapter);
 
 
     }
