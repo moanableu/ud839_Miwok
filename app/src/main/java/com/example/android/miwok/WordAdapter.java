@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,13 +16,14 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
     private static final String LOG_TAG = WordAdapter.class.getSimpleName();
 
+
     /**
      * init adapter. Resource point to given id or, as in this case any value as this is a custom implementation
      * @param context
-     * @param numbers
+     * @param words
      */
-    public WordAdapter(Activity context, ArrayList<Word> numbers){
-        super(context, 0, numbers);
+    public WordAdapter(Activity context, ArrayList<Word> words){
+        super(context, 0, words);
     }
 
     /**
@@ -42,17 +44,32 @@ public class WordAdapter extends ArrayAdapter<Word> {
         }
 
         // get item indes position
-        Word currentNumber = getItem(position);
+        Word currentWord = getItem(position);
 
         // find Miwok view in XML
         TextView numbersMTextView = listItemView.findViewById(R.id.miwok_word);
         //get Miwok translation
-        numbersMTextView.setText(currentNumber.getmMiwokTransition());
+        numbersMTextView.setText(currentWord.getMiwokTransition());
 
         // find English translation in XML
         TextView numbersETextView = listItemView.findViewById(R.id.english_word);
         // get English translsation
-        numbersETextView.setText(currentNumber.getmDefaultTranslation());
+        numbersETextView.setText(currentWord.getDefaultTranslation());
+
+        // find imageview in XML
+        ImageView imageView = (ImageView) listItemView.findViewById(R.id.image);
+        // get the corresponding image
+        //imageView.setImageResource(currentWord.getImageResourceId());
+        if (currentWord.hasImage()){
+
+            //if image provided
+            imageView.setImageResource(currentWord.getImageResourceId());
+            //set img to VISIBLE
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            // if on image provided
+            imageView.setVisibility(View.GONE);
+        }
 
         return listItemView;
     }

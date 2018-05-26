@@ -9,6 +9,11 @@ public class Word {
 
     private String mMiwokTransition;
 
+    private int mImageResourceId = NO_IMAGE_PROVIDED;
+
+    // -1 will determine this var a out of range of any index provided here
+    private static final int NO_IMAGE_PROVIDED = -1;
+
     /**
      * Constructor
      * @param defaultTranslation - English
@@ -20,10 +25,23 @@ public class Word {
     }
 
     /**
+     * Constructor that includes images
+     * @param defaultTranslation
+     * @param miwokTranslation
+     * @param imageResourceId
+     */
+    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId){
+
+        mDefaultTranslation = defaultTranslation;
+        mMiwokTransition = miwokTranslation;
+        mImageResourceId = imageResourceId;
+    }
+
+    /**
      * English translation
      * @return
      */
-    public String getmDefaultTranslation() {
+    public String getDefaultTranslation() {
         return mDefaultTranslation;
     }
 
@@ -31,7 +49,23 @@ public class Word {
      * Miwok translation
      * @return
      */
-    public String getmMiwokTransition() {
+    public String getMiwokTransition() {
         return mMiwokTransition;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getImageResourceId(){
+        return mImageResourceId;
+    }
+
+    /**
+     *  amethod to determine if we have provided an image for a given item
+     * @return
+     */
+    public boolean hasImage(){
+        return mImageResourceId != NO_IMAGE_PROVIDED;
     }
 }
