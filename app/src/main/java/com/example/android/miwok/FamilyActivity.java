@@ -41,7 +41,7 @@ public class FamilyActivity extends AppCompatActivity {
         words.add(new Word("grandfather", "paapa", R.drawable.family_grandfather));
 
         // instantiate a WordAdapter that with data source on the ArrayList
-        WordAdapter adapter = new WordAdapter(this, words);
+        WordAdapter adapter = new WordAdapter(this, words, R.color.category_family);
 
         // link ListView to XML in this case rootView is linked to colors.XML
         ListView listView = findViewById(R.id.list);

@@ -3,6 +3,7 @@ package com.example.android.miwok;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,16 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
     private static final String LOG_TAG = WordAdapter.class.getSimpleName();
 
+    private int mColorResourceId;
 
     /**
      * init adapter. Resource point to given id or, as in this case any value as this is a custom implementation
      * @param context
      * @param words
      */
-    public WordAdapter(Activity context, ArrayList<Word> words){
+    public WordAdapter(Activity context, ArrayList<Word> words, int colorResourceId){
         super(context, 0, words);
+        mColorResourceId = colorResourceId;
     }
 
     /**
@@ -70,6 +73,13 @@ public class WordAdapter extends ArrayAdapter<Word> {
             // if on image provided
             imageView.setVisibility(View.GONE);
         }
+
+        /**
+         * assign custom colors per category
+         */
+        View textContainer = listItemView.findViewById(R.id.text_container);
+        int color = ContextCompat.getColor(getContext(), mColorResourceId);
+        textContainer.setBackgroundColor(color);
 
         return listItemView;
     }

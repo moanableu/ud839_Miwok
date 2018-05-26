@@ -41,7 +41,7 @@ public class PhrasesActivity extends AppCompatActivity {
         words.add(new Word("Come here.", "әnni'nem"));
 
         // instantiate a WordAdapter that with data source on the ArrayList
-        WordAdapter adapter = new WordAdapter(this, words);
+        WordAdapter adapter = new WordAdapter(this, words, R.color.category_phrases);
 
         // link ListView to XML in this case rootView is linked to colors.XML
         ListView listView = findViewById(R.id.list);

@@ -43,7 +43,7 @@ public class NumbersActivity extends AppCompatActivity {
         words.add(new Word("ten", "na’aacha", R.drawable.number_ten));
 
         // instantiate a WordAdapter that with data source on the ArrayList
-        WordAdapter adapter = new WordAdapter(this, words);
+        WordAdapter adapter = new WordAdapter(this, words, R.color.category_numbers);
 
         // link ListView to XML in this case rootView is linked to numbers.XML
         ListView listView = findViewById(R.id.list);
