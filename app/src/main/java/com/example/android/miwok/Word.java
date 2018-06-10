@@ -11,6 +11,8 @@ public class Word {
 
     private int mImageResourceId = NO_IMAGE_PROVIDED;
 
+    private int mAudioResourceId;
+
     // -1 will determine this var a out of range of any index provided here
     private static final int NO_IMAGE_PROVIDED = -1;
 
@@ -19,9 +21,10 @@ public class Word {
      * @param defaultTranslation - English
      * @param miwokTranslation - Miwok
      */
-    public Word(String defaultTranslation, String miwokTranslation){
+    public Word(String defaultTranslation, String miwokTranslation, int audioResourceId){
         mDefaultTranslation = defaultTranslation;
         mMiwokTransition = miwokTranslation;
+        mAudioResourceId = audioResourceId;
     }
 
     /**
@@ -30,11 +33,12 @@ public class Word {
      * @param miwokTranslation
      * @param imageResourceId
      */
-    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId){
+    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId, int audioResourceId){
 
         mDefaultTranslation = defaultTranslation;
         mMiwokTransition = miwokTranslation;
         mImageResourceId = imageResourceId;
+        mAudioResourceId = audioResourceId;
     }
 
     /**
@@ -67,5 +71,19 @@ public class Word {
      */
     public boolean hasImage(){
         return mImageResourceId != NO_IMAGE_PROVIDED;
+    }
+
+    public int getAudioResourceId(){
+        return mAudioResourceId;
+    }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "mDefaultTranslation='" + mDefaultTranslation + '\'' +
+                ", mMiwokTransition='" + mMiwokTransition + '\'' +
+                ", mImageResourceId=" + mImageResourceId +
+                ", mAudioResourceId=" + mAudioResourceId +
+                '}';
     }
 }
