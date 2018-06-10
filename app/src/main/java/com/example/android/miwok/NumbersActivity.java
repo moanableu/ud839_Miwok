@@ -15,8 +15,11 @@
  */
 package com.example.android.miwok;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ import java.util.ArrayList;
 import static com.example.android.miwok.R.id.list;
 
 public class NumbersActivity extends AppCompatActivity {
+
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +56,14 @@ public class NumbersActivity extends AppCompatActivity {
         //set the listView to use the adapter
         listView.setAdapter(adapter);
 
+        // associate an OnClickListener to the array
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
+                // context is needed to eliminate ambiguity
+               mediaPlayer = MediaPlayer.create(NumbersActivity.this, R.raw.number_one);
+               mediaPlayer.start();
+            }
+        });
     }
 }
