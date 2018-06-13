@@ -60,7 +60,29 @@ public class FamilyActivity extends AppCompatActivity {
 
                 mediaPlayer = MediaPlayer.create(FamilyActivity.this, word.getAudioResourceId());
                 mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(mOnCompletionListener);
             }
         });
+    }
+
+    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
+    /**
+     * good practice to avoid battery consumption
+     */
+    private void releaseMediaPlayer(){
+        // if not null it may be in use
+        if (mediaPlayer != null){
+            //if not in use
+            mediaPlayer.release();
+
+            // use this change in state to signal that the media pl;ayer is not in use
+            mediaPlayer = null;
+        }
     }
 }

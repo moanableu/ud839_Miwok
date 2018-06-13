@@ -71,7 +71,31 @@ public class NumbersActivity extends AppCompatActivity {
                 // use the getAudioResourceId method on local var for position
                mediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getAudioResourceId());
                mediaPlayer.start();
+               //call the local onRelease method
+               mediaPlayer.setOnCompletionListener(mOnCompletionListener);
             }
         });
+    }
+
+    //override onCompletion member variable, and call a release method on it
+    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
+    /**
+     * good practice to avoid battery consumption
+     */
+    private void releaseMediaPlayer(){
+        // if not null it may be in use
+        if (mediaPlayer != null){
+            //if not in use
+            mediaPlayer.release();
+
+            // use this change in state to signal that the media pl;ayer is not in use
+            mediaPlayer = null;
+        }
     }
 }
