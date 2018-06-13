@@ -82,8 +82,14 @@ public class PhrasesActivity extends AppCompatActivity {
             //if not in use
             mediaPlayer.release();
 
-            // use this change in state to signal that the media pl;ayer is not in use
+            // use this change in state to signal that the media player is not in use
             mediaPlayer = null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        releaseMediaPlayer();
     }
 }
