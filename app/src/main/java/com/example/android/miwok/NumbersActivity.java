@@ -15,6 +15,7 @@
  */
 package com.example.android.miwok;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.content.Context;
 
 import java.util.ArrayList;
 
@@ -30,11 +32,40 @@ import static com.example.android.miwok.R.id.list;
 public class NumbersActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    private AudioManager am;
+
+    // instantiate AudioMgr.OnAudioFocusChangeListener to handle various steps
+    private AudioManager.OnAudioFocusChangeListener mOnAudioChange =
+            new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                            focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK){
+                        mediaPlayer.pause();
+                        mediaPlayer.seekTo(0);
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN){
+                        // add playback
+                        mediaPlayer.start();
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS){
+                        releaseMediaPlayer();
+                    }
+                }
+            };
+
+    //override onCompletion member variable, and call a release method on it
+    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+
+        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // final added because of variable scope
         final ArrayList<Word> words = new ArrayList<Word>();
@@ -63,27 +94,30 @@ public class NumbersActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
+
+                releaseMediaPlayer();
                 //get access to array index position and store it in a var
                 Word word = words.get(position);
 
-                Log.v("NumbersActivity", "current word: " + word);
-                // context is needed to eliminate ambiguity
-                // use the getAudioResourceId method on local var for position
-               mediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getAudioResourceId());
-               mediaPlayer.start();
-               //call the local onRelease method
-               mediaPlayer.setOnCompletionListener(mOnCompletionListener);
+                //request audio focus
+                int result = am.requestAudioFocus(mOnAudioChange,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+                //audio focus gained
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+
+                    Log.v("NumbersActivity", "current word: " + word);
+                    // context is needed to eliminate ambiguity
+                    // use the getAudioResourceId method on local var for position
+                    mediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getAudioResourceId());
+                    mediaPlayer.start();
+                    //call the local onRelease method
+                    mediaPlayer.setOnCompletionListener(mOnCompletionListener);
+                }
             }
         });
     }
-
-    //override onCompletion member variable, and call a release method on it
-    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            releaseMediaPlayer();
-        }
-    };
 
     /**
      * good practice to avoid battery consumption
@@ -94,8 +128,10 @@ public class NumbersActivity extends AppCompatActivity {
             //if not in use
             mediaPlayer.release();
 
-            // use this change in state to signal that the media pl;ayer is not in use
+            // use this change in state to signal that the media player is not in use
             mediaPlayer = null;
+
+            am.abandonAudioFocus(mOnAudioChange);
         }
     }
 
