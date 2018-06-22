@@ -28,96 +28,13 @@ import java.util.ArrayList;
 
 public class PhrasesActivity extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer;
-    private AudioManager am;
-
-    private AudioManager.OnAudioFocusChangeListener mOnAudioChange =
-            new AudioManager.OnAudioFocusChangeListener() {
-                @Override
-                public void onAudioFocusChange(int focusChange) {
-                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
-                            focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK){
-                        mediaPlayer.pause();
-                        mediaPlayer.seekTo(0);
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN){
-                        mediaPlayer.start();
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS){
-                        releaseMediaPlayer();
-                    }
-                }
-            };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
-
-        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        final ArrayList<Word> words = new ArrayList<Word>();
-        words.add(new Word("Where are you going?", "minto wuksus", R.raw.phrase_where_are_you_going));
-        words.add(new Word("What is your name?", "tinnә oyaase'nә", R.raw.phrase_what_is_your_name));
-        words.add(new Word("My name is...", "oyaaset...", R.raw.phrase_my_name_is));
-        words.add(new Word("How are you feeling?", "michәksәs?", R.raw.phrase_how_are_you_feeling));
-        words.add(new Word("I’m feeling good.", "kuchi achit", R.raw.phrase_im_feeling_good));
-        words.add(new Word("Are you coming?", "әәnәs'aa?", R.raw.phrase_are_you_coming));
-        words.add(new Word("Yes, I’m coming.", "hәә’ әәnәm", R.raw.phrase_yes_im_coming));
-        words.add(new Word("I’m coming.", "әәnәm", R.raw.phrase_im_coming));
-        words.add(new Word("Let’s go.", "yoowutis", R.raw.phrase_lets_go));
-        words.add(new Word("Come here.", "әnni'nem", R.raw.phrase_come_here));
-
-        // instantiate a WordAdapter that with data source on the ArrayList
-        WordAdapter adapter = new WordAdapter(this, words, R.color.category_phrases);
-
-        // link ListView to XML in this case rootView is linked to colors.XML
-        ListView listView = findViewById(R.id.list);
-
-        //set the listView to use the adapter
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-                Word word = words.get(position);
-                releaseMediaPlayer();
-
-                int result = am.requestAudioFocus(mOnAudioChange, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-
-                    mediaPlayer = MediaPlayer.create(PhrasesActivity.this, word.getAudioResourceId());
-                    mediaPlayer.start();
-                    mediaPlayer.setOnCompletionListener(mOnCompletionListener);
-                }
-            }
-        });
-    }
-
-    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            releaseMediaPlayer();
-        }
-    };
-
-    /**
-     * good practice to avoid battery consumption
-     */
-    private void releaseMediaPlayer(){
-        // if not null it may be in use
-        if (mediaPlayer != null){
-            //if not in use
-            mediaPlayer.release();
-
-            // use this change in state to signal that the media player is not in use
-            mediaPlayer = null;
-
-            am.abandonAudioFocus(mOnAudioChange);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        releaseMediaPlayer();
+        setContentView(R.layout.activity_category);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new PhrasesFragment()).commit();
+        // beginTransaction() Starts a series of edit operations on the Fragments associated with this FragmentManager.
+        // saves current fragment in the state, if changes are made after the state is saved they will be lost
+        // commit() Schedules a commit of this transaction.  The commit does not happen immediately;
     }
 }
